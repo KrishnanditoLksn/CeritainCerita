@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Ceritain</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="input_email">Input your email</string>
+    <string name="login_title">Silahkan Login terlebih dahulu</string>
+    <string name="email_hint">Please input your email</string>
+    <string name="please_input_your_password">Please input your password</string>
+    <string name="login">LOGIN</string>
+    <string name="registrasi">REGISTRASI</string>
+    <string name="keterangan_login_register">Baru di ceritain ? Buat akun !</string>
+    <string name="register_title">"Halo user , registrasi dulu ya "</string>
+    <string name="username_hint">"Masukkan username anda "</string>
+</resources>
