@@ -2,7 +2,7 @@ package app.ditodev.ceritain.data.repository
 
 import app.ditodev.ceritain.data.remote.api.ApiService
 
-class RegisterRepository private constructor(
+class RegisterRepository(
     private val apiService: ApiService
 ) {
     suspend fun handleRegistration(
