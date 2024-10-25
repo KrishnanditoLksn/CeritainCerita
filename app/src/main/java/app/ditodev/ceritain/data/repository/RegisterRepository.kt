@@ -16,4 +16,15 @@ class RegisterRepository private constructor(
             password = password
         )
     }
+
+    companion object {
+        @Volatile
+        private var instance: RegisterRepository? = null
+
+        fun getInstance(apiService: ApiService): RegisterRepository {
+            return instance ?: synchronized(this) {
+                instance ?: RegisterRepository(apiService).also { instance = it }
+            }
+        }
+    }
 }
