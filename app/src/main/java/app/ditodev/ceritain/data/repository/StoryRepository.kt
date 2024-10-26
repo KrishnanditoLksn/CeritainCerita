@@ -40,6 +40,16 @@ class StoryRepository(
         emit(Result.Loading)
         try {
             val response = apiService.login(email = email, password = password)
+            if (response.loginResult == null) {
+                emit(Result.Error("User not registered !!"))
+            }
+            userPreference.saveSession(
+                UserModel(
+                    userId = response.loginResult?.userId ?: "",
+                    name = response.loginResult?.name ?: "",
+                    token = response.loginResult?.token ?: ""
+                )
+            )
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
@@ -47,10 +57,6 @@ class StoryRepository(
             val errorMessage = errorBody.message
             emit(Result.Error(errorMessage.toString()))
         }
-    }
-
-    suspend fun saveSession(user: UserModel) {
-        userPreference.saveSession(user)
     }
 
     fun getSession(): Flow<UserModel> {
