@@ -1,5 +1,6 @@
 package app.ditodev.ceritain.data.remote.api
 
+import app.ditodev.ceritain.data.remote.response.LoginResponse
 import app.ditodev.ceritain.data.remote.response.RegisterResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -19,5 +20,5 @@ interface ApiService {
     suspend fun login(
         @Field("email") email: String,
         @Field("password") password: String
-    )
+    ):LoginResponse
 }
