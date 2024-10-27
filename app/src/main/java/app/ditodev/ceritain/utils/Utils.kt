@@ -1,5 +1,7 @@
 package app.ditodev.ceritain.utils
 
+import android.view.View
+import android.widget.ProgressBar
 import androidx.recyclerview.widget.DiffUtil
 import app.ditodev.ceritain.data.remote.response.ListStoryItem
 
@@ -12,5 +14,8 @@ object Utils {
         override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
             return oldItem.id == newItem.id
         }
+    }
+    fun showLoading(isLoading: Boolean, progressBar: ProgressBar) {
+        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }
