@@ -33,6 +33,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         supportActionBar!!.hide()
         setupRegistration()
+        showLoading(false)
     }
 
     private fun setupRegistration() {
