@@ -15,7 +15,7 @@
 
         <!-- Image Section -->
         <ImageView
-            android:id="@+id/iv_story"
+            android:id="@+id/iv_item_photo"
             android:contentDescription="@string/app_name"
             android:layout_width="0dp"
             android:layout_height="200dp"
@@ -27,30 +27,31 @@
 
         <!-- Title Text -->
         <TextView
-            android:id="@+id/tv_description"
+            android:id="@+id/tv_item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            app:layout_constraintTop_toBottomOf="@id/iv_story"
+            app:layout_constraintTop_toBottomOf="@id/iv_item_photo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:paddingTop="8dp" />
 
         <!-- Subtitle Text -->
         <TextView
-            android:id="@+id/card_subtitle"
+            android:id="@+id/tv_description"
             android:layout_width="348dp"
             android:layout_height="38dp"
+            android:textStyle="bold"
             android:paddingTop="4dp"
             android:text="@string/secondary_text"
             android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_description" />
+            app:layout_constraintTop_toBottomOf="@id/tv_item_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
