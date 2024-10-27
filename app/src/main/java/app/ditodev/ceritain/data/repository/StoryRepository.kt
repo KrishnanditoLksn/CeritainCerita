@@ -6,6 +6,7 @@ import app.ditodev.ceritain.data.model.UserModel
 import app.ditodev.ceritain.data.pref.UserPreferences
 import app.ditodev.ceritain.data.remote.api.ApiService
 import app.ditodev.ceritain.data.remote.response.ErrorResponse
+import app.ditodev.ceritain.data.remote.response.ListStoryItem
 import app.ditodev.ceritain.data.remote.response.LoginResponse
 import app.ditodev.ceritain.data.remote.response.RegisterResponse
 import app.ditodev.ceritain.data.result.Result
@@ -51,6 +52,21 @@ class StoryRepository(
                 )
             )
             emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val jsonInString = e.response()?.errorBody()?.string()
+            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+            val errorMessage = errorBody.message
+            emit(Result.Error(errorMessage.toString()))
+        }
+    }
+
+    //display list of stories
+    fun getStories(): LiveData<Result<List<ListStoryItem>>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getStories()
+            val stories = response.listStory
+            emit(Result.Success(stories))
         } catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
             val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
