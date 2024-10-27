@@ -12,4 +12,6 @@
     <string name="keterangan_login_register">Baru di ceritain ? Buat akun !</string>
     <string name="register_title">"Halo user , registrasi dulu ya "</string>
     <string name="username_hint">"Masukkan username anda "</string>
+    <string name="action_settings">Logout</string>
+    <string name="description">Ceritain cerita merupakan aplikasi Posting cerita teman , yuk login dulu , atau registrasi</string>
 </resources>
