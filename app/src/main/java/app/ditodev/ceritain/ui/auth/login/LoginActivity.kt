@@ -2,7 +2,6 @@ package app.ditodev.ceritain.ui.auth.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +15,7 @@ import app.ditodev.ceritain.databinding.ActivityLoginBinding
 import app.ditodev.ceritain.ui.auth.register.RegisterActivity
 import app.ditodev.ceritain.ui.viewmodels.LoginViewModel
 import app.ditodev.ceritain.ui.viewmodels.factories.StoryViewModelFactory
+import app.ditodev.ceritain.utils.Utils.showLoading
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
         }
         supportActionBar?.hide()
         setupAction()
-        showLoading(false)
+        showLoading(false, binding.pbLoad1)
         setupLogin()
     }
 
@@ -52,11 +52,11 @@ class LoginActivity : AppCompatActivity() {
                 if (result != null) {
                     when (result) {
                         is Result.Loading -> {
-                            showLoading(true)
+                            showLoading(true, binding.pbLoad1)
                         }
 
                         is Result.Success -> {
-                            showLoading(false)
+                            showLoading(false, binding.pbLoad1)
                             AlertDialog.Builder(this).apply {
                                 setTitle("Message")
                                 setMessage("Anda berhasil login.Saatnya menikmati story app buatan kami !!")
@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                         }
 
                         is Result.Error -> {
-                            showLoading(false)
+                            showLoading(false, binding.pbLoad1)
                             AlertDialog.Builder(this).apply {
                                 setTitle("Warning")
                                 setMessage("Anda belum  berhasil login status :${result.error}")
@@ -99,9 +99,5 @@ class LoginActivity : AppCompatActivity() {
         binding.btnToRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        binding.pbLoad1.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }
