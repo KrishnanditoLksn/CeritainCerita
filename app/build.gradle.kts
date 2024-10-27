@@ -58,4 +58,13 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
+
+    //LIFECYCLE KTX
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    //COROUTINE
+    implementation(libs.kotlinx.coroutines.android)
+
+    //PREFERENCES DATASTORE
+    implementation(libs.androidx.datastore.preferences)
 }

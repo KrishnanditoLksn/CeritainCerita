@@ -1,4 +1,4 @@
-package app.ditodev.ceritain.ui.auth.register
+package app.ditodev.ceritain.ui.auth.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,45 +9,46 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import app.ditodev.ceritain.MainActivity
 import app.ditodev.ceritain.R
 import app.ditodev.ceritain.data.result.Result
-import app.ditodev.ceritain.databinding.ActivityRegisterBinding
-import app.ditodev.ceritain.ui.auth.login.LoginActivity
-import app.ditodev.ceritain.ui.viewmodels.RegisterViewModel
+import app.ditodev.ceritain.databinding.ActivityLoginBinding
+import app.ditodev.ceritain.ui.auth.register.RegisterActivity
+import app.ditodev.ceritain.ui.viewmodels.LoginViewModel
 import app.ditodev.ceritain.ui.viewmodels.factories.StoryViewModelFactory
 
-class RegisterActivity : AppCompatActivity() {
-    private val registerVm by viewModels<RegisterViewModel> {
+class LoginActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityLoginBinding
+    private val loginVm by viewModels<LoginViewModel> {
         StoryViewModelFactory.getInstance(this)
     }
-    private lateinit var binding: ActivityRegisterBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        supportActionBar!!.hide()
-        setupRegistration()
+        supportActionBar?.hide()
+        setupAction()
         showLoading(false)
+        setupLogin()
     }
 
-    private fun setupRegistration() {
-        binding.btnRegister.setOnClickListener {
-            val name = binding.edRegisterName.text.toString()
-            val email = binding.edRegisterEmail.text.toString()
-            val password = binding.edRegisterPassword.text.toString()
+    private fun setupLogin() {
+        binding.btnLogin.setOnClickListener {
+            val email = binding.edLoginEmail.text.toString()
+            val password = binding.edLoginPassword.text.toString()
 
-            if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
-                binding.edRegisterName.error = "Name is required"
-                binding.edRegisterEmail.error = "Email is required"
-                binding.edRegisterPassword.error = "Password is required"
+            if (email.isEmpty() || password.isEmpty()) {
+                binding.edLoginEmail.error = "Email is required"
+                binding.edLoginPassword.error = "Password is required"
             }
-            registerVm.handleRegistration(name, email, password).observe(this) { result ->
+            loginVm.handleLogin(email, password).observe(this) { result ->
                 if (result != null) {
                     when (result) {
                         is Result.Loading -> {
@@ -58,9 +59,9 @@ class RegisterActivity : AppCompatActivity() {
                             showLoading(false)
                             AlertDialog.Builder(this).apply {
                                 setTitle("Message")
-                                setMessage("Anda berhasil registrasi.Saatnya login!!")
+                                setMessage("Anda berhasil login.Saatnya menikmati story app buatan kami !!")
                                 setPositiveButton("Lanjut") { _, _ ->
-                                    val intent = Intent(context, LoginActivity::class.java)
+                                    val intent = Intent(context, MainActivity::class.java)
                                     intent.flags =
                                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                     startActivity(intent)
@@ -75,8 +76,8 @@ class RegisterActivity : AppCompatActivity() {
                             showLoading(false)
                             AlertDialog.Builder(this).apply {
                                 setTitle("Warning")
-                                setMessage("Anda tidak berhasil registrasi status : ${result.error}")
-                                setPositiveButton("Lanjut") { _, _ ->
+                                setMessage("Anda belum  berhasil login status :${result.error}")
+                                setPositiveButton("Oke") { _, _ ->
                                     val intent = Intent(context, LoginActivity::class.java)
                                     intent.flags =
                                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -91,13 +92,16 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
+
+    }
+
+    private fun setupAction() {
+        binding.btnToRegister.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.pbLoading.visibility = View.VISIBLE
-        } else {
-            binding.pbLoading.visibility = View.GONE
-        }
+        binding.pbLoad1.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }
