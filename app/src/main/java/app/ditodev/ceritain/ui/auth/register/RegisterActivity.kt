@@ -57,7 +57,7 @@ class RegisterActivity : AppCompatActivity() {
                         is Result.Success -> {
                             showLoading(false)
                             AlertDialog.Builder(this).apply {
-                                setTitle("Yeah!")
+                                setTitle("Message")
                                 setMessage("Anda berhasil registrasi.Saatnya login!!")
                                 setPositiveButton("Lanjut") { _, _ ->
                                     val intent = Intent(context, LoginActivity::class.java)
@@ -74,8 +74,8 @@ class RegisterActivity : AppCompatActivity() {
                         is Result.Error -> {
                             showLoading(false)
                             AlertDialog.Builder(this).apply {
-                                setTitle("Yeah!")
-                                setMessage("Anda tidak  berhasil registrasi.Akun sudah ada !!")
+                                setTitle("Warning")
+                                setMessage("Anda tidak berhasil registrasi status : ${result.error}")
                                 setPositiveButton("Lanjut") { _, _ ->
                                     val intent = Intent(context, LoginActivity::class.java)
                                     intent.flags =

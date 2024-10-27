@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
                         is Result.Success -> {
                             showLoading(false)
                             AlertDialog.Builder(this).apply {
-                                setTitle("Yeah!")
+                                setTitle("Message")
                                 setMessage("Anda berhasil login.Saatnya menikmati story app buatan kami !!")
                                 setPositiveButton("Lanjut") { _, _ ->
                                     val intent = Intent(context, MainActivity::class.java)
@@ -75,10 +75,10 @@ class LoginActivity : AppCompatActivity() {
                         is Result.Error -> {
                             showLoading(false)
                             AlertDialog.Builder(this).apply {
-                                setTitle("Yeah!")
-                                setMessage("Anda belum  berhasil login karena ${result.error}. Silahkan registrasi terlebih dahulu")
-                                setPositiveButton("Lanjut") { _, _ ->
-                                    val intent = Intent(context, RegisterActivity::class.java)
+                                setTitle("Warning")
+                                setMessage("Anda belum  berhasil login status :${result.error}")
+                                setPositiveButton("Oke") { _, _ ->
+                                    val intent = Intent(context, LoginActivity::class.java)
                                     intent.flags =
                                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                     startActivity(intent)
