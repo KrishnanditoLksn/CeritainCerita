@@ -79,6 +79,28 @@ class StoryRepository(
         return userPreference.getSession()
     }
 
+    fun getStoriesById(id: String): LiveData<Result<ListStoryItem>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getStoriesById(id)
+            val story = response.story ?: ListStoryItem(
+                photoUrl = "",
+                createdAt = "",
+                name = "",
+                description = "",
+                lon = 0.0,
+                id = "",
+                lat = 0.0
+            )
+            emit(Result.Success(story))
+        } catch (e: HttpException) {
+            val jsonString = e.response()?.errorBody()?.string()
+            val errorBody = Gson().fromJson(jsonString, ErrorResponse::class.java)
+            val errorMessage = errorBody.message
+            emit(Result.Error(errorMessage.toString()))
+        }
+    }
+
     suspend fun logout() {
         userPreference.logout()
     }
