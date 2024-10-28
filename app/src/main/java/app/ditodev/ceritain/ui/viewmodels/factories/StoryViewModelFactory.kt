@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import app.ditodev.ceritain.data.di.DependencyInjection
 import app.ditodev.ceritain.data.repository.StoryRepository
+import app.ditodev.ceritain.ui.viewmodels.DetailStoryViewModel
 import app.ditodev.ceritain.ui.viewmodels.DisplayStoryViewModel
 import app.ditodev.ceritain.ui.viewmodels.LoginViewModel
 import app.ditodev.ceritain.ui.viewmodels.MainViewModel
@@ -29,6 +30,10 @@ class StoryViewModelFactory(private val repository: StoryRepository) :
 
             modelClass.isAssignableFrom(DisplayStoryViewModel::class.java) -> {
                 DisplayStoryViewModel(repository) as T
+            }
+
+            modelClass.isAssignableFrom(DetailStoryViewModel::class.java) -> {
+                DetailStoryViewModel(repository) as T
             }
 
             else -> {

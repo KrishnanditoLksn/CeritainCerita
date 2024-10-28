@@ -1,11 +1,13 @@
 package app.ditodev.ceritain.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import app.ditodev.ceritain.data.remote.response.ListStoryItem
 import app.ditodev.ceritain.databinding.ItemRowBinding
+import app.ditodev.ceritain.ui.detail.DetailStoryActivity
 import app.ditodev.ceritain.utils.Utils
 import com.bumptech.glide.Glide
 
@@ -32,6 +34,13 @@ class StoriesListAdapter :
                 .into(binding.ivItemPhoto)
             binding.tvItemName.text = stories.name
             binding.tvDescription.text = stories.description
+
+            binding.ivItemPhoto.setOnClickListener {
+                val context = binding.root.context
+                val intent = Intent(context, DetailStoryActivity::class.java)
+                intent.putExtra(Utils.EXTRA_ID, stories.id)
+                context.startActivity(intent)
+            }
         }
     }
 }

@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Ceritain"
         tools:targetApi="31">
         <activity
+            android:name=".ui.detail.DetailStoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.splash.WelcomeScreenActivity"
             android:exported="false" />
         <activity
