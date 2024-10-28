@@ -10,6 +10,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import app.ditodev.ceritain.databinding.FragmentDashboardBinding
+import app.ditodev.ceritain.utils.CameraUtil
 
 class DashboardFragment : Fragment() {
 
@@ -19,9 +20,7 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnGallery.setOnClickListener {
-            startGallery()
-        }
+        setupPicture()
     }
 
     override fun onCreateView(
@@ -36,6 +35,15 @@ class DashboardFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupPicture() {
+        binding.btnGallery.setOnClickListener {
+            startGallery()
+        }
+        binding.btnCamera.setOnClickListener {
+            startCamera()
+        }
     }
 
     private fun startGallery() {
@@ -56,6 +64,21 @@ class DashboardFragment : Fragment() {
     private fun showImage() {
         currentImage?.let {
             binding.topImage.setImageURI(it)
+        }
+    }
+
+    private fun startCamera() {
+        currentImage = CameraUtil.getImageUri(requireContext())
+        launcherCamera.launch(currentImage!!)
+    }
+
+    private val launcherCamera = registerForActivityResult(ActivityResultContracts.TakePicture())
+    { isSuccess ->
+        if (isSuccess) {
+            showImage()
+        } else {
+            currentImage = null
+            Toast.makeText(activity, "No Picture Selected", Toast.LENGTH_SHORT).show()
         }
     }
 }
