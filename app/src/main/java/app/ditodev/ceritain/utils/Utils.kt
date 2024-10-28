@@ -15,7 +15,10 @@ object Utils {
             return oldItem.id == newItem.id
         }
     }
+
     fun showLoading(isLoading: Boolean, progressBar: ProgressBar) {
         progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
+
+    const val EXTRA_ID = "extra_id"
 }
