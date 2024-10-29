@@ -8,11 +8,11 @@ import app.ditodev.ceritain.data.remote.response.ListStoryItem
 object Utils {
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
         override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
     }
 
