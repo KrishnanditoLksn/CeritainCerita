@@ -10,6 +10,8 @@
 
     <Button
         android:id="@+id/button1"
+        android:alpha="0"
+        tools:alpha="100"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login"
@@ -22,6 +24,8 @@
 
     <Button
         android:id="@+id/button2"
+        android:alpha="0"
+        tools:alpha="100"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/registrasi"
@@ -34,6 +38,8 @@
 
     <ImageView
         android:id="@+id/imageView"
+        android:alpha="0"
+        tools:alpha="100"
         android:layout_width="352dp"
         android:layout_height="247dp"
         android:contentDescription="@string/app_name"
