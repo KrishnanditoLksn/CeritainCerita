@@ -8,25 +8,39 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import app.ditodev.ceritain.R
+import app.ditodev.ceritain.data.result.Result
 import app.ditodev.ceritain.databinding.FragmentDashboardBinding
+import app.ditodev.ceritain.ui.viewmodels.UploadPictureViewModel
+import app.ditodev.ceritain.ui.viewmodels.factories.StoryViewModelFactory
 import app.ditodev.ceritain.utils.CameraUtil
+import app.ditodev.ceritain.utils.Utils
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
     private var currentImage: Uri? = null
+    private val uploadVm by viewModels<UploadPictureViewModel> {
+        StoryViewModelFactory.getInstance(requireActivity())
+    }
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupPicture()
+        Utils.showLoading(false, binding.progressBarLoading)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
@@ -43,6 +57,50 @@ class DashboardFragment : Fragment() {
         }
         binding.btnCamera.setOnClickListener {
             startCamera()
+        }
+
+        binding.buttonAdd.setOnClickListener {
+            currentImage?.let { uri ->
+                val imageFile = CameraUtil.uriToFile(uri, requireContext())
+                val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+                val multiPartBody = MultipartBody.Part.createFormData(
+                    "photo", imageFile.name, requestImageFile
+                )
+
+                val description = binding.edAddDescription.text.toString()
+                val requestBody = description.toRequestBody("text/plain".toMediaType())
+
+                uploadVm.uploadStory(multiPartBody, requestBody)
+                    .observe(viewLifecycleOwner) { result ->
+                        when (result) {
+                            is Result.Loading -> {
+                                Utils.showLoading(true, binding.progressBarLoading)
+                            }
+
+                            is Result.Success -> {
+                                Utils.showLoading(false, binding.progressBarLoading)
+                                AlertDialog.Builder(requireContext())
+                                    .setTitle("Warning")
+                                    .setMessage(result.data.message)
+                                    .setPositiveButton("Gambar sukses diupload") { _, _ ->
+                                        findNavController().navigate(R.id.navigation_home)
+                                    }
+                                    .show()
+                            }
+
+                            is Result.Error -> {
+                                Utils.showLoading(false, binding.progressBarLoading)
+                                AlertDialog.Builder(requireContext())
+                                    .setTitle("Error")
+                                    .setMessage(result.error)
+                                    .setPositiveButton("Gambar gagal diupload") { _, _ ->
+                                        findNavController().navigate(R.id.navigation_dashboard)
+                                    }
+                                    .show()
+                            }
+                        }
+                    }
+            }
         }
     }
 
@@ -72,13 +130,13 @@ class DashboardFragment : Fragment() {
         launcherCamera.launch(currentImage!!)
     }
 
-    private val launcherCamera = registerForActivityResult(ActivityResultContracts.TakePicture())
-    { isSuccess ->
-        if (isSuccess) {
-            showImage()
-        } else {
-            currentImage = null
-            Toast.makeText(activity, "No Picture Selected", Toast.LENGTH_SHORT).show()
+    private val launcherCamera =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess) {
+                showImage()
+            } else {
+                currentImage = null
+                Toast.makeText(activity, "No Picture Selected", Toast.LENGTH_SHORT).show()
+            }
         }
-    }
 }
