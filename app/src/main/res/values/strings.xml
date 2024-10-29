@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Ceritain</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_dashboard">Upload</string>
     <string name="title_notifications">Notifications</string>
     <string name="input_email">Input your email</string>
     <string name="login_title">Silahkan Login terlebih dahulu</string>
@@ -15,4 +15,8 @@
     <string name="action_settings">Logout</string>
     <string name="description">Ceritain cerita merupakan aplikasi Posting cerita teman , yuk login dulu , atau registrasi</string>
     <string name="secondary_text">Secondary text</string>
+    <string name="ed_text">Input your description here</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
 </resources>

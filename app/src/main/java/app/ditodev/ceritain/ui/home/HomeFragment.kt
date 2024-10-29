@@ -25,10 +25,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvStory.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = homeAdapter
-        }
         displayList()
     }
 
@@ -63,5 +59,14 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        binding.rvStory.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = homeAdapter
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.getStories()
     }
 }

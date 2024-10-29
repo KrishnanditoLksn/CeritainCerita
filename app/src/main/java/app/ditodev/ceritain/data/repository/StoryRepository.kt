@@ -9,9 +9,12 @@ import app.ditodev.ceritain.data.remote.response.ErrorResponse
 import app.ditodev.ceritain.data.remote.response.ListStoryItem
 import app.ditodev.ceritain.data.remote.response.LoginResponse
 import app.ditodev.ceritain.data.remote.response.RegisterResponse
+import app.ditodev.ceritain.data.remote.response.UploadStoryResponse
 import app.ditodev.ceritain.data.result.Result
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.HttpException
 
 class StoryRepository(
@@ -101,9 +104,26 @@ class StoryRepository(
         }
     }
 
+    fun uploadStory(
+        file: MultipartBody.Part,
+        description: RequestBody
+    ): LiveData<Result<UploadStoryResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.uploadStory(file, description)
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val jsonString = e.response()?.errorBody()?.string()
+            val errorBody = Gson().fromJson(jsonString, ErrorResponse::class.java)
+            val errorMessage = errorBody.message
+            emit(Result.Error(errorMessage.toString()))
+        }
+    }
+
     suspend fun logout() {
         userPreference.logout()
     }
+
 
     companion object {
         @Volatile

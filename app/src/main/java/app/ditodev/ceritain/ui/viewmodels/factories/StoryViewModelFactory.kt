@@ -10,6 +10,7 @@ import app.ditodev.ceritain.ui.viewmodels.DisplayStoryViewModel
 import app.ditodev.ceritain.ui.viewmodels.LoginViewModel
 import app.ditodev.ceritain.ui.viewmodels.MainViewModel
 import app.ditodev.ceritain.ui.viewmodels.RegisterViewModel
+import app.ditodev.ceritain.ui.viewmodels.UploadPictureViewModel
 
 class StoryViewModelFactory(private val repository: StoryRepository) :
     ViewModelProvider.NewInstanceFactory() {
@@ -34,6 +35,10 @@ class StoryViewModelFactory(private val repository: StoryRepository) :
 
             modelClass.isAssignableFrom(DetailStoryViewModel::class.java) -> {
                 DetailStoryViewModel(repository) as T
+            }
+
+            modelClass.isAssignableFrom(UploadPictureViewModel::class.java) -> {
+                UploadPictureViewModel(repository) as T
             }
 
             else -> {
