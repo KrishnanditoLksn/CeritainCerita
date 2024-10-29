@@ -18,6 +18,7 @@ import app.ditodev.ceritain.databinding.FragmentDashboardBinding
 import app.ditodev.ceritain.ui.viewmodels.UploadPictureViewModel
 import app.ditodev.ceritain.ui.viewmodels.factories.StoryViewModelFactory
 import app.ditodev.ceritain.utils.CameraUtil
+import app.ditodev.ceritain.utils.CameraUtil.reduceFileImage
 import app.ditodev.ceritain.utils.Utils
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -61,7 +62,7 @@ class DashboardFragment : Fragment() {
 
         binding.buttonAdd.setOnClickListener {
             currentImage?.let { uri ->
-                val imageFile = CameraUtil.uriToFile(uri, requireContext())
+                val imageFile = CameraUtil.uriToFile(uri, requireContext()).reduceFileImage()
                 val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
                 val multiPartBody = MultipartBody.Part.createFormData(
                     "photo", imageFile.name, requestImageFile
