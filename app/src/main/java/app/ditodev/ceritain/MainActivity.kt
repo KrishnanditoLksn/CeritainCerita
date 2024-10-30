@@ -34,17 +34,17 @@ class MainActivity : AppCompatActivity() {
             if (it.token.isEmpty()) {
                 startActivity(Intent(this, WelcomeScreenActivity::class.java))
                 finish()
+            } else {
+                val navController = findNavController(R.id.nav_host_fragment_activity_main)
+                val appBarConfiguration = AppBarConfiguration(
+                    setOf(
+                        R.id.navigation_home, R.id.navigation_dashboard
+                    )
+                )
+                setupActionBarWithNavController(navController, appBarConfiguration)
+                navView.setupWithNavController(navController)
             }
         }
-
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
