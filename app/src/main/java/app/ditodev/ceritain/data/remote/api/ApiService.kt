@@ -39,10 +39,10 @@ interface ApiService {
 
     @GET("stories/{id}")
     suspend fun getStoriesById(
-        @Path("id")
         @Header("Authorization")
-        id: String,
-        token: String
+        token: String,
+        @Path("id")
+        id: String
     ): StoryResponse
 
     @Multipart

@@ -85,7 +85,7 @@ class StoryRepository(
         emit(Result.Loading)
         try {
             val token = userPreference.getToken().first()
-            val response = apiService.getStoriesById(id, "Bearer $token")
+            val response = apiService.getStoriesById("Bearer $token", id)
             val story = response.story ?: ListStoryItem(
                 photoUrl = "",
                 createdAt = "",
