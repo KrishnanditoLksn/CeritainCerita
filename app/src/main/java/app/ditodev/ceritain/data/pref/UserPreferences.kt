@@ -37,6 +37,12 @@ class UserPreferences private constructor(private val dataStore: DataStore<Prefe
         }
     }
 
+    fun getToken(): Flow<String> {
+        return dataStore.data.map {
+            it[TOKEN_KEY] ?: ""
+        }
+    }
+
     companion object {
         private val USER_ID = stringPreferencesKey("userId")
         private val NAME_KEY = stringPreferencesKey("name")

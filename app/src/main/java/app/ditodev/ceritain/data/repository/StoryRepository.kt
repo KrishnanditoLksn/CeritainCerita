@@ -13,6 +13,7 @@ import app.ditodev.ceritain.data.remote.response.UploadStoryResponse
 import app.ditodev.ceritain.data.result.Result
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
@@ -44,9 +45,6 @@ class StoryRepository(
         emit(Result.Loading)
         try {
             val response = apiService.login(email = email, password = password)
-            if (response.loginResult == null) {
-                emit(Result.Error("User not registered !!"))
-            }
             userPreference.saveSession(
                 UserModel(
                     userId = response.loginResult?.userId ?: "",
@@ -67,7 +65,8 @@ class StoryRepository(
     fun getStories(): LiveData<Result<List<ListStoryItem>>> = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.getStories()
+            val token = userPreference.getToken().first()
+            val response = apiService.getStories("Bearer $token")
             val stories = response.listStory
             emit(Result.Success(stories))
         } catch (e: HttpException) {
@@ -85,7 +84,8 @@ class StoryRepository(
     fun getStoriesById(id: String): LiveData<Result<ListStoryItem>> = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.getStoriesById(id)
+            val token = userPreference.getToken().first()
+            val response = apiService.getStoriesById(id, "Bearer $token")
             val story = response.story ?: ListStoryItem(
                 photoUrl = "",
                 createdAt = "",
@@ -110,7 +110,9 @@ class StoryRepository(
     ): LiveData<Result<UploadStoryResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.uploadStory(file, description)
+            val token = userPreference.getToken().first()
+            val response =
+                apiService.uploadStory(file, description, "Bearer $token")
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val jsonString = e.response()?.errorBody()?.string()
