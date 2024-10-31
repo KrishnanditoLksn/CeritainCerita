@@ -23,6 +23,7 @@
             android:id="@+id/rv_story"
             android:layout_width="409dp"
             android:layout_height="730dp"
+            android:layout_marginBottom="56dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
