@@ -4,6 +4,9 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.DiffUtil
 import app.ditodev.ceritain.data.remote.response.ListStoryItem
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 object Utils {
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
@@ -21,4 +24,13 @@ object Utils {
     }
 
     const val EXTRA_ID = "extra_id"
+
+    fun formatDate(date: String, target: String): String {
+        val instant = Instant.parse(date)
+        val formatter = DateTimeFormatter
+            .ofPattern("dd MMM yyyy | HH:mm")
+            .withZone(ZoneId.of(target))
+
+        return formatter.format(instant)
+    }
 }
