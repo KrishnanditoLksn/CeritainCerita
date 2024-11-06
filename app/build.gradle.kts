@@ -10,6 +10,7 @@ android {
     defaultConfig {
         applicationId = "app.ditodev.ceritain"
         minSdk = 28
+        //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -70,6 +71,13 @@ dependencies {
 
     //GLIDE
     implementation(libs.glide)
+
+    //MOCKITO
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.mockito.kotlin)// Pastikan versinya sesuai dengan versi terbaru yang kompatibel
 
     //PAGING
     implementation(libs.androidx.paging.runtime)
