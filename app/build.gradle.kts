@@ -70,4 +70,8 @@ dependencies {
 
     //GLIDE
     implementation(libs.glide)
+
+    //PAGING
+    implementation(libs.androidx.paging.runtime)
+
 }
