@@ -26,6 +26,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayList()
+        binding.rvStory.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = homeAdapter
+        }
     }
 
     override fun onCreateView(
@@ -58,10 +62,6 @@ class HomeFragment : Fragment() {
                     Utils.showLoading(false, binding.progressBar)
                 }
             }
-        }
-        binding.rvStory.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = homeAdapter
         }
     }
 
