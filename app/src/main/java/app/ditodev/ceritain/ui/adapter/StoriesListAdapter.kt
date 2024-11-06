@@ -10,6 +10,7 @@ import app.ditodev.ceritain.databinding.ItemRowBinding
 import app.ditodev.ceritain.ui.detail.DetailStoryActivity
 import app.ditodev.ceritain.utils.Utils
 import com.bumptech.glide.Glide
+import java.util.TimeZone
 
 class StoriesListAdapter :
     ListAdapter<ListStoryItem, StoriesListAdapter.ViewHolder>(Utils.DIFF_CALLBACK) {
@@ -33,6 +34,7 @@ class StoriesListAdapter :
                 .load(stories.photoUrl)
                 .into(binding.ivItemPhoto)
             binding.tvItemName.text = stories.name
+            binding.tvDate.text = Utils.formatDate(stories.createdAt!!, TimeZone.getDefault().id)
             binding.tvDescription.text = stories.description
 
             binding.ivItemPhoto.setOnClickListener {
