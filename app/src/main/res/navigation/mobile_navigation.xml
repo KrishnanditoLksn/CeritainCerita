@@ -16,4 +16,13 @@
         android:name="app.ditodev.ceritain.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_maps"
+        android:name="app.ditodev.ceritain.ui.maps.MapsFragment"
+        android:label="Maps"
+        tools:layout="@layout/fragment_maps"
+        >
+
+    </fragment>
 </navigation>
