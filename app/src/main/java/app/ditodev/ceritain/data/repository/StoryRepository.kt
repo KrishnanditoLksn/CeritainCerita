@@ -2,7 +2,12 @@ package app.ditodev.ceritain.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import app.ditodev.ceritain.data.model.UserModel
+import app.ditodev.ceritain.data.paging.source.StoryPagingSource
 import app.ditodev.ceritain.data.pref.UserPreferences
 import app.ditodev.ceritain.data.remote.api.ApiService
 import app.ditodev.ceritain.data.remote.response.ErrorResponse
@@ -75,6 +80,17 @@ class StoryRepository(
             val errorMessage = errorBody.message
             emit(Result.Error(errorMessage.toString()))
         }
+    }
+
+    fun getStoriesPaging(): LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20
+            ),
+            pagingSourceFactory = {
+                StoryPagingSource(apiService, userPreference)
+            }
+        ).liveData
     }
 
     fun getSession(): Flow<UserModel> {
