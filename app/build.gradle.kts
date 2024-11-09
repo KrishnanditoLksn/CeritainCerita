@@ -78,4 +78,9 @@ dependencies {
 
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.mockito.kotlin)// Pastikan versinya sesuai dengan versi terbaru yang kompatibel
+
+    //PAGING
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.runtime.ktx)
+
 }

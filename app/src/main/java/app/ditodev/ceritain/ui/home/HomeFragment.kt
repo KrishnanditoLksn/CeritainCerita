@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.ditodev.ceritain.data.result.Result
 import app.ditodev.ceritain.databinding.FragmentHomeBinding
 import app.ditodev.ceritain.ui.adapter.StoriesListAdapter
 import app.ditodev.ceritain.ui.viewmodels.DisplayStoryViewModel
@@ -30,6 +31,7 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = homeAdapter
         }
+        Utils.showLoading(false, binding.progressBar)
     }
 
     override fun onCreateView(
@@ -47,19 +49,23 @@ class HomeFragment : Fragment() {
     }
 
     private fun displayList() {
-        homeViewModel.getStories().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
+        homeViewModel.getStoriesPaging().observe(viewLifecycleOwner) { result ->
+            homeAdapter.submitData(lifecycle, result)
+        }
+
+        homeAdapter.addLoadStateListener { loadState ->
+            when (loadState.source.refresh) {
+                is LoadState.Loading -> {
                     Utils.showLoading(true, binding.progressBar)
                 }
 
-                is Result.Success -> {
+                is LoadState.NotLoading -> {
                     Utils.showLoading(false, binding.progressBar)
-                    homeAdapter.submitList(result.data)
                 }
 
-                is Result.Error -> {
+                is LoadState.Error -> {
                     Utils.showLoading(false, binding.progressBar)
+                    Toast.makeText(context, "Error loading data", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -67,6 +73,6 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        homeViewModel.getStories()
+        homeViewModel.getStoriesPaging()
     }
 }
