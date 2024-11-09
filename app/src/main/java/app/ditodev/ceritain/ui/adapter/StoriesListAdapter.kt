@@ -3,7 +3,7 @@ package app.ditodev.ceritain.ui.adapter
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import app.ditodev.ceritain.data.remote.response.ListStoryItem
 import app.ditodev.ceritain.databinding.ItemRowBinding
@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import java.util.TimeZone
 
 class StoriesListAdapter :
-    ListAdapter<ListStoryItem, StoriesListAdapter.ViewHolder>(Utils.DIFF_CALLBACK) {
+    PagingDataAdapter<ListStoryItem, StoriesListAdapter.ViewHolder>(Utils.DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         iewType: Int
@@ -24,7 +24,9 @@ class StoriesListAdapter :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val items = getItem(position)
-        holder.bind(items)
+        if (items != null) {
+            holder.bind(items)
+        }
     }
 
     inner class ViewHolder(private val binding: ItemRowBinding) :
