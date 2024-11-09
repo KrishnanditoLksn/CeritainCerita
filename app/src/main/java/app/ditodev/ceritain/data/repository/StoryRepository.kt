@@ -138,6 +138,19 @@ class StoryRepository(
         }
     }
 
+    fun getStoriesWithLocation(): LiveData<Result<List<ListStoryItem>>> = liveData {
+        emit(Result.Loading)
+        try {
+            val token = userPreference.getToken().first()
+            val response = apiService.getStoriesWithLocation(1, "Bearer $token").listStory
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val jsonString = e.response()?.errorBody().toString()
+            val errorBody = Gson().fromJson(jsonString, ErrorResponse::class.java).message
+            emit(Result.Error(errorBody.toString()))
+        }
+    }
+
     suspend fun logout() {
         userPreference.logout()
     }
