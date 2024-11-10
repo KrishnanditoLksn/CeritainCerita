@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import app.ditodev.ceritain.data.remote.response.ListStoryItem
 import app.ditodev.ceritain.databinding.ItemRowBinding
@@ -13,7 +14,7 @@ import com.bumptech.glide.Glide
 import java.util.TimeZone
 
 class StoriesListAdapter :
-    PagingDataAdapter<ListStoryItem, StoriesListAdapter.ViewHolder>(Utils.DIFF_CALLBACK) {
+    PagingDataAdapter<ListStoryItem, StoriesListAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         iewType: Int
@@ -44,6 +45,18 @@ class StoriesListAdapter :
                 val intent = Intent(context, DetailStoryActivity::class.java)
                 intent.putExtra(Utils.EXTRA_ID, stories.id)
                 context.startActivity(intent)
+            }
+        }
+    }
+
+    companion object{
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
+            override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+                return oldItem == newItem
             }
         }
     }
