@@ -80,7 +80,7 @@ class DisplayStoryViewModelTest {
     }
 
     @Test
-    fun `when get story should not null and return data`() = runTest {
+    fun `when get story empty should return no data`() = runTest {
         val data: PagingData<ListStoryItem> = PagingData.from(emptyList())
         val expectedData = MutableLiveData<PagingData<ListStoryItem>>()
         expectedData.value = data
