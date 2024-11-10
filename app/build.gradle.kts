@@ -57,6 +57,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.kotlinx.coroutines.test) // Sesuaikan dengan versi yang Anda butuhkan
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.kotlinx.coroutines.test.v132)
+    testImplementation(libs.mockk) // Add MockK dependency
 
     //RETROFIT ,OKHTTP , LOGGININTERCEPTOR
     implementation(libs.retrofit)
@@ -86,5 +90,7 @@ dependencies {
     //PAGING
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.runtime.ktx)
+
+    //TEST DISPATCHER
 
 }
