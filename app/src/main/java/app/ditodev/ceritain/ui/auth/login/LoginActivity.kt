@@ -2,12 +2,17 @@ package app.ditodev.ceritain.ui.auth.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialResponse
+import androidx.lifecycle.lifecycleScope
+import app.ditodev.ceritain.BuildConfig
 import app.ditodev.ceritain.MainActivity
 import app.ditodev.ceritain.R
 import app.ditodev.ceritain.data.result.Result
@@ -16,9 +21,20 @@ import app.ditodev.ceritain.ui.auth.register.RegisterActivity
 import app.ditodev.ceritain.ui.viewmodels.LoginViewModel
 import app.ditodev.ceritain.ui.viewmodels.factories.StoryViewModelFactory
 import app.ditodev.ceritain.utils.Utils.showLoading
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+import com.google.firebase.Firebase
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var auth: FirebaseAuth
     private val loginVm by viewModels<LoginViewModel> {
         StoryViewModelFactory.getInstance(this)
     }
@@ -34,6 +50,10 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
         supportActionBar?.hide()
+        auth = Firebase.auth
+        binding.btnGoogleLogin.setOnClickListener {
+            signIn()
+        }
         setupAction()
         showLoading(false, binding.pbLoad1)
         setupLogin()
@@ -99,5 +119,85 @@ class LoginActivity : AppCompatActivity() {
         binding.btnToRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
+    }
+
+    private fun signIn() {
+        val credentialManager = androidx.credentials.CredentialManager.create(this)
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId(BuildConfig.WEB_CLIENT_ID)
+            .build()
+
+        val request = androidx.credentials.GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        lifecycleScope.launch {
+            try {
+                val result: GetCredentialResponse = credentialManager.getCredential(
+                    request = request,
+                    context = this@LoginActivity
+                )
+                handleSignIn(result)
+            } catch (e: androidx.credentials.exceptions.GetCredentialException) {
+                Log.e("Error", e.message.toString())
+            }
+        }
+    }
+
+    private fun handleSignIn(result: GetCredentialResponse) {
+        when (val credential = result.credential) {
+            is CustomCredential -> {
+                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                    try {
+                        val googleIdTokenCredential =
+                            GoogleIdTokenCredential.createFrom(credential.data)
+                        firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
+                        Log.d("IDGOOGLETOKEN", googleIdTokenCredential.idToken)
+                    } catch (e: GoogleIdTokenParsingException) {
+                        Log.e("ERROR", "Invalid google id token response ${e.message.toString()}")
+                    }
+                } else {
+                    Log.e("LOGINACTIVITY", "Credential error")
+                }
+            }
+
+            else -> {
+                Log.e("LOGINACTIVITY", "Credential error")
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential: AuthCredential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.d("LOGINACTIVITY", "Sign in with credential success")
+                    val user: FirebaseUser? = auth.currentUser
+                    updateUI(user)
+                } else {
+                    Log.w("LOGINACTIVITY", "Sign in with credential:failure", task.exception)
+                    updateUI(null)
+                }
+            }
+    }
+
+    private fun updateUI(currentUser: FirebaseUser?) {
+        if (currentUser != null) {
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+            finish()
+//        } else {
+//            Toast.makeText(this, "Silahkan regis dulu", Toast.LENGTH_SHORT).show()
+//            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+//            finish()
+//        }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val currentUser = auth.currentUser
+        updateUI(currentUser)
     }
 }
