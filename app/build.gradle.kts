@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleAndroidLibrariesMapsplatformSecretsGradlePlugin)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -18,6 +19,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", "${project.findProperty("API_KEY")}")
+        buildConfigField("String","WEB_CLIENT_ID" , "${project.findProperty("WEB_CLIENT_ID")}")
     }
 
     buildTypes {
@@ -54,6 +56,25 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.activity)
     implementation(libs.play.services.maps)
+//    implementation(libs.firebase.auth)
+//    implementation(libs.play.services.auth)
+//    implementation(libs.androidx.credentials)
+//    implementation(libs.androidx.play.services.auth)
+//    implementation(libs.play.services.auth.v2060)
+
+
+    //FIREBASE COK
+    implementation(platform(libs.firebase.bom))
+//    implementation(libs.play.services.auth)
+//    implementation(libs.androidx.credentials)
+//    implementation(libs.googleid)
+
+
+    //noinspection UseTomlInstead
+    implementation("com.google.firebase:firebase-auth")
+    implementation(libs.play.services.auth)
+    implementation(libs.googleid)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
