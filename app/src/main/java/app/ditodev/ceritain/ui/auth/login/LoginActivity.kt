@@ -3,6 +3,7 @@ package app.ditodev.ceritain.ui.auth.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -153,7 +154,6 @@ class LoginActivity : AppCompatActivity() {
                         val googleIdTokenCredential =
                             GoogleIdTokenCredential.createFrom(credential.data)
                         firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
-                        Log.d("IDGOOGLETOKEN", googleIdTokenCredential.idToken)
                     } catch (e: GoogleIdTokenParsingException) {
                         Log.e("ERROR", "Invalid google id token response ${e.message.toString()}")
                     }
@@ -173,12 +173,15 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Log.d("LOGINACTIVITY", "Sign in with credential success")
                     val user: FirebaseUser? = auth.currentUser
                     updateUI(user)
                 } else {
-                    Log.w("LOGINACTIVITY", "Sign in with credential:failure", task.exception)
+                    Log.d("LOGINACTIVITY", "Sign in with credential:failure", task.exception)
                     updateUI(null)
+                    Toast
+                        .makeText(this, "Silahkan Registrasi dahulu", Toast.LENGTH_SHORT)
+                        .show()
+                    startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
                 }
             }
     }
@@ -187,11 +190,6 @@ class LoginActivity : AppCompatActivity() {
         if (currentUser != null) {
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
-//        } else {
-//            Toast.makeText(this, "Silahkan regis dulu", Toast.LENGTH_SHORT).show()
-//            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
-//            finish()
-//        }
         }
     }
 
