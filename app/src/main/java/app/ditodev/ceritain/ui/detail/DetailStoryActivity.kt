@@ -1,6 +1,10 @@
 package app.ditodev.ceritain.ui.detail
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -31,7 +35,24 @@ class DetailStoryActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        if (!isOnline()) {
+            Toast.makeText(this, "Network error", Toast.LENGTH_SHORT).show()
+            return
+        }
         fetchDetailStories()
+    }
+
+    private fun isOnline(): Boolean {
+        val connManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connManager.activeNetwork ?: return false
+        val actionNet = connManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            actionNet.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            actionNet.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            actionNet.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            actionNet.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+            else -> false
+        }
     }
 
     private fun fetchDetailStories() {
