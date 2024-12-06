@@ -14,6 +14,7 @@ import app.ditodev.ceritain.data.result.Result
 import app.ditodev.ceritain.databinding.FragmentMapsBinding
 import app.ditodev.ceritain.ui.viewmodels.MapsViewModel
 import app.ditodev.ceritain.ui.viewmodels.factories.StoryViewModelFactory
+import app.ditodev.ceritain.utils.NetworkUtil.isOnline
 import app.ditodev.ceritain.utils.Utils
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -70,6 +71,10 @@ class MapsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (!isOnline(requireActivity())) {
+            Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
+            return
+        }
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
         Utils.showLoading(true, binding.progressBar)

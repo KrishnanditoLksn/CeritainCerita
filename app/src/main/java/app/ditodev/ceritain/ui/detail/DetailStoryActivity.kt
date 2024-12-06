@@ -1,6 +1,7 @@
 package app.ditodev.ceritain.ui.detail
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -12,6 +13,7 @@ import app.ditodev.ceritain.data.result.Result
 import app.ditodev.ceritain.databinding.ActivityDetailStoryBinding
 import app.ditodev.ceritain.ui.viewmodels.DetailStoryViewModel
 import app.ditodev.ceritain.ui.viewmodels.factories.StoryViewModelFactory
+import app.ditodev.ceritain.utils.NetworkUtil.isOnline
 import app.ditodev.ceritain.utils.Utils
 import com.bumptech.glide.Glide
 
@@ -30,6 +32,10 @@ class DetailStoryActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        if (!isOnline(this)) {
+            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show()
+            return
         }
         fetchDetailStories()
     }
