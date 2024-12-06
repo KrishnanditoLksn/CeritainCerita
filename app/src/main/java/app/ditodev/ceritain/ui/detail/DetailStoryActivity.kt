@@ -1,8 +1,5 @@
 package app.ditodev.ceritain.ui.detail
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +13,7 @@ import app.ditodev.ceritain.data.result.Result
 import app.ditodev.ceritain.databinding.ActivityDetailStoryBinding
 import app.ditodev.ceritain.ui.viewmodels.DetailStoryViewModel
 import app.ditodev.ceritain.ui.viewmodels.factories.StoryViewModelFactory
+import app.ditodev.ceritain.utils.NetworkUtil.isOnline
 import app.ditodev.ceritain.utils.Utils
 import com.bumptech.glide.Glide
 
@@ -35,24 +33,11 @@ class DetailStoryActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        if (!isOnline()) {
-            Toast.makeText(this, "Network error", Toast.LENGTH_SHORT).show()
+        if (!isOnline(this)) {
+            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show()
             return
         }
         fetchDetailStories()
-    }
-
-    private fun isOnline(): Boolean {
-        val connManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connManager.activeNetwork ?: return false
-        val actionNet = connManager.getNetworkCapabilities(network) ?: return false
-        return when {
-            actionNet.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            actionNet.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            actionNet.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            actionNet.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
-            else -> false
-        }
     }
 
     private fun fetchDetailStories() {
